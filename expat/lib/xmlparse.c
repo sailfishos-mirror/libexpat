@@ -576,6 +576,7 @@ static XML_Char *poolAppend(STRING_POOL *pool, const ENCODING *enc,
 static XML_Char *poolStoreString(STRING_POOL *pool, const ENCODING *enc,
                                  const char *ptr, const char *end);
 static XML_Bool FASTCALL poolGrow(STRING_POOL *pool);
+static XML_Bool FASTCALL poolGrowUntil(STRING_POOL *pool, size_t needed);
 static const XML_Char *FASTCALL poolCopyString(STRING_POOL *pool,
                                                const XML_Char *s);
 static const XML_Char *FASTCALL poolCopyStringNoFinish(STRING_POOL *pool,
@@ -630,6 +631,8 @@ static XML_Parser getRootParserOf(XML_Parser parser,
 static unsigned long getDebugLevel(const char *variableName,
                                    unsigned long defaultDebugLevel);
 
+static bool poolAppendChars(STRING_POOL *pool, const XML_Char *s, size_t len);
+
 #define poolStart(pool) ((pool)->start)
 #define poolLength(pool) ((pool)->ptr - (pool)->start)
 #define poolChop(pool) ((void)--(pool->ptr))
@@ -640,6 +643,21 @@ static unsigned long getDebugLevel(const char *variableName,
   (((pool)->ptr == (pool)->end && ! poolGrow(pool))                            \
        ? 0                                                                     \
        : ((*((pool)->ptr)++ = c), 1))
+
+bool
+poolAppendChars(STRING_POOL *pool, const XML_Char *s, size_t len) {
+  // Detect and prevent integer overflow
+  if (len > SIZE_MAX / sizeof(XML_Char))
+    return false;
+
+  if (! poolGrowUntil(pool, len))
+    return false;
+
+  memcpy(pool->ptr, s, len * sizeof(XML_Char));
+  pool->ptr += len;
+
+  return true;
+}
 
 #if ! defined(XML_TESTING)
 const
@@ -8188,6 +8206,19 @@ poolGrow(STRING_POOL *pool) {
     pool->end = tem->s + blockSize;
   }
   return XML_TRUE;
+}
+
+static XML_Bool FASTCALL
+poolGrowUntil(STRING_POOL *pool, size_t needed) {
+  for (;;) {
+    const size_t available = pool->end - pool->ptr;
+    if (available >= needed) {
+      return XML_TRUE;
+    }
+    if (! poolGrow(pool)) {
+      return XML_FALSE;
+    }
+  }
 }
 
 static int FASTCALL
