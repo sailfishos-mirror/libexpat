@@ -355,7 +355,15 @@ ExternalEntityRefHandler(XML_Parser parser, const XML_Char *context,
     XML_Parser ext_parser
         = XML_ExternalEntityParserCreate(parser, context, g_encoding);
     if (ext_parser != NULL) {
-      rc = Parse(ext_parser, g_external_entity, g_external_entity_size, 1);
+      // NOTE: We reset g_external_entity so that we cannot get stuck
+      //       in a loop parsing the same external document over and
+      //       over again.
+      const char *const external_data = g_external_entity;
+      const size_t external_data_size = g_external_entity_size;
+      g_external_entity = nullptr;
+      g_external_entity_size = 0;
+
+      rc = Parse(ext_parser, external_data, external_data_size, 1);
       XML_ParserFree(ext_parser);
     }
   }
