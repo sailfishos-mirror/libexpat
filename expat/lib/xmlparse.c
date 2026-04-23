@@ -8441,8 +8441,10 @@ copyString(const XML_Char *s, XML_Parser parser) {
 
   if (result == NULL)
     return NULL;
+
   /* Copy the original into place */
   memcpy(result, s, bytesRequired);
+
   return result;
 }
 
