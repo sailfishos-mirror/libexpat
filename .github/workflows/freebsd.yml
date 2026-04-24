@@ -54,6 +54,7 @@ jobs:
 
         prepare: |
           set -e -u -x
+          pkg update -f
           pkg install -y \
               autoconf \
               automake \
