@@ -138,8 +138,7 @@ resolveSystemId(const XML_Char *base, const XML_Char *systemId,
 #endif
   )
     return systemId;
-  *toFree = (XML_Char *)malloc((tcslen(base) + tcslen(systemId) + 2)
-                               * sizeof(XML_Char));
+  *toFree = malloc((tcslen(base) + tcslen(systemId) + 2) * sizeof(XML_Char));
   if (! *toFree)
     return systemId;
   tcscpy(*toFree, base);

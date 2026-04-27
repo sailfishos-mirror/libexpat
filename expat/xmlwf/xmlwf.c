@@ -1235,8 +1235,8 @@ tmain(int argc, XML_Char **argv) {
         }
 #endif
       }
-      outName = (XML_Char *)malloc((tcslen(outputDir) + tcslen(file) + 2)
-                                   * sizeof(XML_Char));
+      outName
+          = malloc((tcslen(outputDir) + tcslen(file) + 2) * sizeof(XML_Char));
       if (! outName) {
         tperror(T("Could not allocate memory"));
         exit(XMLWF_EXIT_INTERNAL_ERROR);
