@@ -94,8 +94,7 @@ tcase_add_test(TCase *tc, tcase_test_function test) {
   if (tc->allocated == tc->ntests) {
     int nalloc = tc->allocated + 100;
     size_t new_size = sizeof(tcase_test_function) * nalloc;
-    tcase_test_function *const new_tests
-        = (tcase_test_function *)realloc(tc->tests, new_size);
+    tcase_test_function *const new_tests = realloc(tc->tests, new_size);
     assert(new_tests != NULL);
     tc->tests = new_tests;
     tc->allocated = nalloc;

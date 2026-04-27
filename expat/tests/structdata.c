@@ -87,8 +87,8 @@ StructData_AddItem(StructData *storage, const XML_Char *s, int data0, int data1,
     StructDataEntry *new_entries;
 
     storage->max_count += STRUCT_EXTENSION_COUNT;
-    new_entries = (StructDataEntry *)realloc(
-        storage->entries, storage->max_count * sizeof(StructDataEntry));
+    new_entries = realloc(storage->entries,
+                          storage->max_count * sizeof(StructDataEntry));
     assert(new_entries != NULL);
     storage->entries = new_entries;
   }
