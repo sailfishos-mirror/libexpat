@@ -3435,8 +3435,7 @@ external_bom_checker(XML_Parser parser, const XML_Char *context,
     fail("Could not create external entity parser");
 
   if (! xcstrcmp(systemId, XCS("004-2.ent"))) {
-    struct bom_testdata *const testdata
-        = (struct bom_testdata *)XML_GetUserData(parser);
+    struct bom_testdata *const testdata = XML_GetUserData(parser);
     const char *const external = testdata->external;
     const int split = testdata->split;
     testdata->nested_callback_happened = XML_TRUE;
