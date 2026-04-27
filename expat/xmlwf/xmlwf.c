@@ -196,7 +196,7 @@ startElement(void *userData, const XML_Char *name, const XML_Char **atts) {
     ++p;
   nAtts = (int)((p - atts) >> 1);
   if (nAtts > 1)
-    qsort((void *)atts, nAtts, sizeof(XML_Char *) * 2, attcmp);
+    qsort(atts, nAtts, sizeof(XML_Char *) * 2, attcmp);
   while (*atts) {
     puttc(T(' '), fp);
     fputts(*atts++, fp);
@@ -252,7 +252,7 @@ startElementNS(void *userData, const XML_Char *name, const XML_Char **atts) {
     ++p;
   nAtts = (int)((p - atts) >> 1);
   if (nAtts > 1)
-    qsort((void *)atts, nAtts, sizeof(XML_Char *) * 2, nsattcmp);
+    qsort(atts, nAtts, sizeof(XML_Char *) * 2, nsattcmp);
   while (*atts) {
     name = *atts++;
     sep = tcsrchr(name, NSSEP);
