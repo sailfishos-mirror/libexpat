@@ -54,7 +54,7 @@
 
 Suite *
 suite_create(const char *name) {
-  Suite *suite = (Suite *)calloc(1, sizeof(Suite));
+  Suite *suite = calloc(1, sizeof(Suite));
   if (suite != NULL) {
     suite->name = name;
   }
@@ -63,7 +63,7 @@ suite_create(const char *name) {
 
 TCase *
 tcase_create(const char *name) {
-  TCase *tc = (TCase *)calloc(1, sizeof(TCase));
+  TCase *tc = calloc(1, sizeof(TCase));
   if (tc != NULL) {
     tc->name = name;
   }
@@ -129,7 +129,7 @@ suite_free(Suite *suite) {
 
 SRunner *
 srunner_create(Suite *suite) {
-  SRunner *const runner = (SRunner *)calloc(1, sizeof(SRunner));
+  SRunner *const runner = calloc(1, sizeof(SRunner));
   if (runner != NULL) {
     runner->suite = suite;
   }
