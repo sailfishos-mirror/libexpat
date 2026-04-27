@@ -584,7 +584,7 @@ metaEndDocument(void *userData) {
 static void XMLCALL
 metaStartElement(void *userData, const XML_Char *name, const XML_Char **atts) {
   XML_Parser parser = userData;
-  XmlwfUserData *data = (XmlwfUserData *)XML_GetUserData(parser);
+  XmlwfUserData *data = XML_GetUserData(parser);
   FILE *fp = data->fp;
   const XML_Char **specifiedAttsEnd
       = atts + XML_GetSpecifiedAttributeCount(parser);
@@ -617,7 +617,7 @@ metaStartElement(void *userData, const XML_Char *name, const XML_Char **atts) {
 static void XMLCALL
 metaEndElement(void *userData, const XML_Char *name) {
   XML_Parser parser = userData;
-  XmlwfUserData *data = (XmlwfUserData *)XML_GetUserData(parser);
+  XmlwfUserData *data = XML_GetUserData(parser);
   FILE *fp = data->fp;
   ftprintf(fp, T("<endtag name=\"%s\""), name);
   metaLocation(parser);
@@ -628,7 +628,7 @@ static void XMLCALL
 metaProcessingInstruction(void *userData, const XML_Char *target,
                           const XML_Char *data) {
   XML_Parser parser = userData;
-  XmlwfUserData *usrData = (XmlwfUserData *)XML_GetUserData(parser);
+  XmlwfUserData *usrData = XML_GetUserData(parser);
   FILE *fp = usrData->fp;
   ftprintf(fp, T("<pi target=\"%s\" data=\""), target);
   characterData(usrData, data, (int)tcslen(data));
@@ -640,7 +640,7 @@ metaProcessingInstruction(void *userData, const XML_Char *target,
 static void XMLCALL
 metaComment(void *userData, const XML_Char *data) {
   XML_Parser parser = userData;
-  XmlwfUserData *usrData = (XmlwfUserData *)XML_GetUserData(parser);
+  XmlwfUserData *usrData = XML_GetUserData(parser);
   FILE *fp = usrData->fp;
   fputts(T("<comment data=\""), fp);
   characterData(usrData, data, (int)tcslen(data));
@@ -652,7 +652,7 @@ metaComment(void *userData, const XML_Char *data) {
 static void XMLCALL
 metaStartCdataSection(void *userData) {
   XML_Parser parser = userData;
-  XmlwfUserData *data = (XmlwfUserData *)XML_GetUserData(parser);
+  XmlwfUserData *data = XML_GetUserData(parser);
   FILE *fp = data->fp;
   fputts(T("<startcdata"), fp);
   metaLocation(parser);
@@ -662,7 +662,7 @@ metaStartCdataSection(void *userData) {
 static void XMLCALL
 metaEndCdataSection(void *userData) {
   XML_Parser parser = userData;
-  XmlwfUserData *data = (XmlwfUserData *)XML_GetUserData(parser);
+  XmlwfUserData *data = XML_GetUserData(parser);
   FILE *fp = data->fp;
   fputts(T("<endcdata"), fp);
   metaLocation(parser);
@@ -672,7 +672,7 @@ metaEndCdataSection(void *userData) {
 static void XMLCALL
 metaCharacterData(void *userData, const XML_Char *s, int len) {
   XML_Parser parser = userData;
-  XmlwfUserData *data = (XmlwfUserData *)XML_GetUserData(parser);
+  XmlwfUserData *data = XML_GetUserData(parser);
   FILE *fp = data->fp;
   fputts(T("<chars str=\""), fp);
   characterData(data, s, len);
@@ -686,7 +686,7 @@ metaStartDoctypeDecl(void *userData, const XML_Char *doctypeName,
                      const XML_Char *sysid, const XML_Char *pubid,
                      int has_internal_subset) {
   XML_Parser parser = userData;
-  XmlwfUserData *data = (XmlwfUserData *)XML_GetUserData(parser);
+  XmlwfUserData *data = XML_GetUserData(parser);
   FILE *fp = data->fp;
   UNUSED_P(sysid);
   UNUSED_P(pubid);
@@ -699,7 +699,7 @@ metaStartDoctypeDecl(void *userData, const XML_Char *doctypeName,
 static void XMLCALL
 metaEndDoctypeDecl(void *userData) {
   XML_Parser parser = userData;
-  XmlwfUserData *data = (XmlwfUserData *)XML_GetUserData(parser);
+  XmlwfUserData *data = XML_GetUserData(parser);
   FILE *fp = data->fp;
   fputts(T("<enddoctype"), fp);
   metaLocation(parser);
@@ -711,7 +711,7 @@ metaNotationDecl(void *userData, const XML_Char *notationName,
                  const XML_Char *base, const XML_Char *systemId,
                  const XML_Char *publicId) {
   XML_Parser parser = userData;
-  XmlwfUserData *data = (XmlwfUserData *)XML_GetUserData(parser);
+  XmlwfUserData *data = XML_GetUserData(parser);
   FILE *fp = data->fp;
   UNUSED_P(base);
   ftprintf(fp, T("<notation name=\"%s\""), notationName);
@@ -732,7 +732,7 @@ metaEntityDecl(void *userData, const XML_Char *entityName, int is_param,
                const XML_Char *systemId, const XML_Char *publicId,
                const XML_Char *notationName) {
   XML_Parser parser = userData;
-  XmlwfUserData *data = (XmlwfUserData *)XML_GetUserData(parser);
+  XmlwfUserData *data = XML_GetUserData(parser);
   FILE *fp = data->fp;
 
   UNUSED_P(is_param);
@@ -769,7 +769,7 @@ static void XMLCALL
 metaStartNamespaceDecl(void *userData, const XML_Char *prefix,
                        const XML_Char *uri) {
   XML_Parser parser = userData;
-  XmlwfUserData *data = (XmlwfUserData *)XML_GetUserData(parser);
+  XmlwfUserData *data = XML_GetUserData(parser);
   FILE *fp = data->fp;
   fputts(T("<startns"), fp);
   if (prefix)
@@ -785,7 +785,7 @@ metaStartNamespaceDecl(void *userData, const XML_Char *prefix,
 static void XMLCALL
 metaEndNamespaceDecl(void *userData, const XML_Char *prefix) {
   XML_Parser parser = userData;
-  XmlwfUserData *data = (XmlwfUserData *)XML_GetUserData(parser);
+  XmlwfUserData *data = XML_GetUserData(parser);
   FILE *fp = data->fp;
   if (! prefix)
     fputts(T("<endns/>\n"), fp);
