@@ -46,18 +46,34 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - runs-on: windows-2025
+          - runs-on: windows-2022
             cmake_build_type: Debug
             cmake_generator: Visual Studio 17 2022
             cmake_platform: Win32
             expat_char_type: char
             expat_dll: libexpatd.dll
+            expat_sln: expat.sln
           - runs-on: windows-2022
             cmake_build_type: Debug
             cmake_generator: Visual Studio 17 2022
             cmake_platform: x64
             expat_char_type: wchar_t
             expat_dll: libexpatwd.dll
+            expat_sln: expat.sln
+          - runs-on: windows-2025-vs2026
+            cmake_build_type: Debug
+            cmake_generator: Visual Studio 18 2026
+            cmake_platform: Win32
+            expat_char_type: char
+            expat_dll: libexpatd.dll
+            expat_sln: expat.slnx
+          - runs-on: windows-2025-vs2026
+            cmake_build_type: Debug
+            cmake_generator: Visual Studio 18 2026
+            cmake_platform: x64
+            expat_char_type: wchar_t
+            expat_dll: libexpatwd.dll
+            expat_sln: expat.slnx
     defaults:
       run:
         shell: bash
@@ -91,6 +107,7 @@ jobs:
     - name: Build
       env:
         cmake_build_type: ${{ matrix.cmake_build_type }}
+        expat_sln: ${{ matrix.expat_sln }}
       run: |-
         msbuild_args=(
           -m
@@ -98,7 +115,7 @@ jobs:
         )
         set -x
         cd expat/build
-        MSBuild.exe "${msbuild_args[@]}" expat.sln
+        MSBuild.exe "${msbuild_args[@]}" "${expat_sln}"
 
     - name: Run tests
       env:
