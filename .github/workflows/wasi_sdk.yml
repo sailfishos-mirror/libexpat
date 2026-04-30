@@ -49,11 +49,12 @@ jobs:
 
     - name: Install build dependencies
       env:
-        wasi_sdk_major: "32"
+        wasi_sdk_major: "33"
+        wasi_sdk_minor: "0"
       run: |-
         set -x -u
-        wget "https://github.com/WebAssembly/wasi-sdk/releases/download/wasi-sdk-${wasi_sdk_major}/wasi-sdk-${wasi_sdk_major}.0-x86_64-linux.deb"
-        sudo apt-get install --yes "./wasi-sdk-${wasi_sdk_major}.0-x86_64-linux.deb"
+        wget "https://github.com/WebAssembly/wasi-sdk/releases/download/wasi-sdk-${wasi_sdk_major}/wasi-sdk-${wasi_sdk_major}.${wasi_sdk_minor}-x86_64-linux.deb"
+        sudo apt-get install --yes "./wasi-sdk-${wasi_sdk_major}.${wasi_sdk_minor}-x86_64-linux.deb"
 
     - name: Build using WASI SDK
       run: |
