@@ -1177,6 +1177,13 @@ doParseXmlDecl(const ENCODING *(*encodingFinder)(const ENCODING *, const char *,
       *versionPtr = val;
     if (versionEndPtr)
       *versionEndPtr = ptr;
+    /* The version number must not be empty; VersionNum requires at least
+       one character.  The encoding and standalone pseudo-attributes below
+       already reject an empty value, so keep version consistent. */
+    if (val == ptr - enc->minBytesPerChar) {
+      *badPtr = val;
+      return 0;
+    }
     if (! parsePseudoAttribute(enc, ptr, end, &name, &nameEnd, &val, &ptr)) {
       *badPtr = ptr;
       return 0;
