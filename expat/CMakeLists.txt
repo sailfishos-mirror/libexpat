@@ -206,7 +206,7 @@ if(MSVC)
     # - https://cmake.org/cmake/help/latest/variable/MSVC_VERSION.html
     # - https://sourceforge.net/p/predef/wiki/Compilers/
     # - https://en.wikipedia.org/wiki/Microsoft_Visual_Studio#History
-    set(_EXPAT_MSVC_REQUIRED_INT 1800)  # i.e. 12.0/2013/1800; see PR #426
+    set(_EXPAT_MSVC_REQUIRED_INT 1900)  # i.e. 14.0/2015(Update 2)/1900
     set(_EXPAT_MSVC_SUPPORTED_INT 1930)
     set(_EXPAT_MSVC_SUPPORTED_DISPLAY "Visual Studio 17.0/2022/${_EXPAT_MSVC_SUPPORTED_INT}")
 
@@ -219,6 +219,12 @@ if(MSVC)
             message(WARNING "Please use ${_EXPAT_MSVC_SUPPORTED_DISPLAY} or later.  Thank you!")
         endif()
     endif()
+
+    # Stop MSVC from trying to decode the source files using
+    # the Windows system code page encoding that could e.g. be Windows-936
+    # on a Chinese Windows system rather than UTF-8.
+    # https://devblogs.microsoft.com/cppblog/new-options-for-managing-character-sets-in-the-microsoft-cc-compiler/
+    add_compile_options(/source-charset:utf-8)
 endif()
 
 macro(_expat_copy_bool_int source_ref dest_ref)
