@@ -4052,16 +4052,28 @@ doContent(XML_Parser parser, int startTagLevel, const ENCODING *enc,
         if (MUST_CONVERT(enc, s)) {
           ICHAR *dataPtr = (ICHAR *)parser->m_dataBuf;
           XmlConvert(enc, &s, end, &dataPtr, (ICHAR *)parser->m_dataBufEnd);
+          size_t len = dataPtr - (ICHAR *)parser->m_dataBuf;
           beforeHandler(parser);
-          parser->m_characterDataHandler(
-              parser->m_handlerArg, parser->m_dataBuf,
-              (int)(dataPtr - (ICHAR *)parser->m_dataBuf));
+          if (len > INT_MAX) {
+            for (const XML_Char *start = parser->m_dataBuf; len > 0;
+                 len -= INT_MAX, start += INT_MAX)
+              parser->m_characterDataHandler(parser->m_handlerArg, start,
+                                             (int)len);
+          } else
+            parser->m_characterDataHandler(parser->m_handlerArg,
+                                           parser->m_dataBuf, (int)len);
           afterHandler(parser);
         } else {
+          size_t len = (const XML_Char *)end - (const XML_Char *)s;
           beforeHandler(parser);
-          parser->m_characterDataHandler(
-              parser->m_handlerArg, (const XML_Char *)s,
-              (int)((const XML_Char *)end - (const XML_Char *)s));
+          if (len > INT_MAX) {
+            for (const XML_Char *start = (const XML_Char *)s; len > 0;
+                 len -= INT_MAX, start += INT_MAX)
+              parser->m_characterDataHandler(parser->m_handlerArg, start,
+                                             (int)len);
+          } else
+            parser->m_characterDataHandler(parser->m_handlerArg,
+                                           (const XML_Char *)s, (int)len);
           afterHandler(parser);
         }
       } else if (parser->m_defaultHandler)
@@ -4088,9 +4100,15 @@ doContent(XML_Parser parser, int startTagLevel, const ENCODING *enc,
             const enum XML_Convert_Result convert_res = XmlConvert(
                 enc, &s, next, &dataPtr, (ICHAR *)parser->m_dataBufEnd);
             *eventEndPP = s;
+            size_t len = dataPtr - (ICHAR *)parser->m_dataBuf;
             beforeHandler(parser);
-            charDataHandler(parser->m_handlerArg, parser->m_dataBuf,
-                            (int)(dataPtr - (ICHAR *)parser->m_dataBuf));
+            if (len > INT_MAX) {
+              for (const XML_Char *start = parser->m_dataBuf; len > 0;
+                   len -= INT_MAX, start += INT_MAX)
+                charDataHandler(parser->m_handlerArg, start, (int)len);
+            } else
+              charDataHandler(parser->m_handlerArg, parser->m_dataBuf,
+                              (int)len);
             afterHandler(parser);
             if ((convert_res == XML_CONVERT_COMPLETED)
                 || (convert_res == XML_CONVERT_INPUT_INCOMPLETE))
@@ -4098,9 +4116,15 @@ doContent(XML_Parser parser, int startTagLevel, const ENCODING *enc,
             *eventPP = s;
           }
         } else {
+          size_t len = (const XML_Char *)next - (const XML_Char *)s;
           beforeHandler(parser);
-          charDataHandler(parser->m_handlerArg, (const XML_Char *)s,
-                          (int)((const XML_Char *)next - (const XML_Char *)s));
+          if (len > INT_MAX) {
+            for (const XML_Char *start = (const XML_Char *)s; len > 0;
+                 len -= INT_MAX, start += INT_MAX)
+              charDataHandler(parser->m_handlerArg, start, (int)len);
+          } else
+            charDataHandler(parser->m_handlerArg, (const XML_Char *)s,
+                            (int)len);
           afterHandler(parser);
         }
       } else if (parser->m_defaultHandler)
@@ -4990,9 +5014,15 @@ doCdataSection(XML_Parser parser, const ENCODING *enc, const char **startPtr,
             const enum XML_Convert_Result convert_res = XmlConvert(
                 enc, &s, next, &dataPtr, (ICHAR *)parser->m_dataBufEnd);
             *eventEndPP = next;
+            size_t len = dataPtr - (ICHAR *)parser->m_dataBuf;
             beforeHandler(parser);
-            charDataHandler(parser->m_handlerArg, parser->m_dataBuf,
-                            (int)(dataPtr - (ICHAR *)parser->m_dataBuf));
+            if (len > INT_MAX) {
+              for (const XML_Char *start = parser->m_dataBuf; len > 0;
+                   len -= INT_MAX, start += INT_MAX)
+                charDataHandler(parser->m_handlerArg, start, (int)len);
+            } else
+              charDataHandler(parser->m_handlerArg, parser->m_dataBuf,
+                              (int)len);
             afterHandler(parser);
             if ((convert_res == XML_CONVERT_COMPLETED)
                 || (convert_res == XML_CONVERT_INPUT_INCOMPLETE))
@@ -5000,9 +5030,15 @@ doCdataSection(XML_Parser parser, const ENCODING *enc, const char **startPtr,
             *eventPP = s;
           }
         } else {
+          size_t len = (const XML_Char *)next - (const XML_Char *)s;
           beforeHandler(parser);
-          charDataHandler(parser->m_handlerArg, (const XML_Char *)s,
-                          (int)((const XML_Char *)next - (const XML_Char *)s));
+          if (len > INT_MAX) {
+            for (const XML_Char *start = (const XML_Char *)s; len > 0;
+                 len -= INT_MAX, start += INT_MAX)
+              charDataHandler(parser->m_handlerArg, start, (int)len);
+          } else
+            charDataHandler(parser->m_handlerArg, (const XML_Char *)s,
+                            (int)len);
           afterHandler(parser);
         }
       } else if (parser->m_defaultHandler)
